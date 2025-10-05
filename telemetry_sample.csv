@@ -1,0 +1,7 @@
+region,service,latency_ms,uptime_pct,timestamp
+apac,checkout,167.32,99.404,20250301
+apac,checkout,206.22,97.976,20250302
+emea,analytics,142.42,97.251,20250302
+amer,checkout,147.72,99.354,20250302
+emea,support,152.16,98.187,20250303
+amer,analytics,172.43,97.456,20250301

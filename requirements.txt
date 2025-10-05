@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+numpy
+pandas
+python-multipart
+httpx
+pydantic
+fastapi
+uvicorn
+numpy
+pandas
+python-multipart
