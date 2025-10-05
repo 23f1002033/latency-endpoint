@@ -97,3 +97,25 @@ async def metrics(q: Query):
         }
 
     return results
+
+
+# Duplicate routes that some Vercel mounts forward (helps avoid double-prefixing issues)
+@app.get("/api")
+async def health_api():
+    return await health()
+
+
+@app.post("/api")
+async def metrics_api(q: Query):
+    return await metrics(q)
+
+
+# Catch-all: respond to any path under the function mount
+@app.get("/{full_path:path}")
+async def health_catchall(full_path: str):
+    return await health()
+
+
+@app.post("/{full_path:path}")
+async def metrics_catchall(full_path: str, q: Query):
+    return await metrics(q)
