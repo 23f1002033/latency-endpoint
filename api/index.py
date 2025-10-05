@@ -11,9 +11,28 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["GET", "POST"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def add_cors_header(request, call_next):
+    """Ensure Access-Control-Allow-Origin is present on all responses.
+
+    FastAPI's CORSMiddleware should handle this, but some serverless routing
+    or static responses can miss the header. This middleware guarantees the
+    header is present for both normal and preflight responses.
+    """
+    response = await call_next(request)
+    # don't override if set, but ensure wildcard is available
+    if "access-control-allow-origin" not in {k.lower() for k in response.headers.keys()}:
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    # also ensure preflight headers are present when appropriate
+    if request.method == "OPTIONS":
+        response.headers.setdefault("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
+        response.headers.setdefault("Access-Control-Allow-Headers", "*")
+    return response
 
 
 class Query(BaseModel):
